@@ -1,14 +1,22 @@
 const request = require('request');
 const axios = require('axios');
+const decode = require('decode-html');
 
-function login (req, res){
+async function login (req, res){
     // return new Promise(async function (resolve, reject) {
+        let xsrfToken = await getCSRF();
+        xsrfToken = xsrfToken[0].split("=");
+        xsrfToken = xsrfToken[1];
+        // xsrfToken = xsrfToken.replace("; expires","");
+        // xsrfToken = xsrfToken.replace("%3D","=");
+        xsrfToken = decode(xsrfToken)
+        console.log(xsrfToken)
         var options = {
             'method': 'POST',
             'url': 'https://loopapi.logitgroup.com/login',
             'headers': {
               'Accept': 'application/json',
-              'X-XSRF-TOKEN': 'eyJpdiI6IkhFdGUvYjRZd2lVOHpKeGt0MnEvR0E9PSIsInZhbHVlIjoiRmc2MWIyeFNyMmlBRkRMWTVma2EwbDlOQ3BxdzVoL1ZJT2UzWDhFN0tTaVZIZ3JUbzkxMU1jRXVValNKUTU3U1FzcXRkT2h0VDRYSGVZa1ZKMG5KeWdzU1VzVEJPZUdXQWRqelNsckdmVElFVzROS1htaFg5NUFWemQ5UFp2cEUiLCJtYWMiOiI2ZjM5MDZmZWYwYzZkZmQzNWQyNzUwMzdlNzBiODZmZTBhYTM4ZDNjMTczYjFlMTc4NmU4Zjc0MTViNDg3Mjg2IiwidGFnIjoiIn0='
+              'X-XSRF-TOKEN': xsrfToken
             },
             formData: {
               'email': 'apiaccess1@logitgroup.com',
