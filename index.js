@@ -13,12 +13,14 @@ app.use(bodyParser.json());
 // });
 // const {getProject} = require('./prodege')
 const { login } = require('./loopapi')
+const { getLoopProjects } = require('./loopapi')
 
 // app.get('/get-project',getProject)
 app.post('/api/login',login)
+app.get('/api/getLoopProjects',getLoopProjects)
 
 // /get-project?id=1234
 
-app.listen(7002,()=>{
+app.listen(3000,()=>{
     console.log('App run successfully');
 });

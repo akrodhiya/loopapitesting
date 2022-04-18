@@ -3,13 +3,13 @@ const axios = require('axios');
 const decode = require('decode-html');
 
 async function login (req, res){
-    // return new Promise(async function (resolve, reject) {
-        let xsrfToken = await getCSRF();
-        xsrfToken = xsrfToken[0].split("=");
-        xsrfToken = xsrfToken[1];
+    return new Promise(async function (resolve, reject) {
+        // let xsrfToken = await getCSRF();
+        // xsrfToken = xsrfToken[1].split("=");
+        // xsrfToken = xsrfToken[1];
         // xsrfToken = xsrfToken.replace("; expires","");
         // xsrfToken = xsrfToken.replace("%3D","=");
-        xsrfToken = decode(xsrfToken)
+        xsrfToken = decodeURIComponent("eyJpdiI6IlRkek02QnZ2VHBib2pFdDVtU1RUZUE9PSIsInZhbHVlIjoiTDhzcjIxdFNmTGltdnJIRGpidmV4aG1mYjVIU0lUNGpZZFpxK3NiNHk1cml4bnAxSzk2bDRKTnVzV0RBK2Ztc0IvcU41bmVuUGtHVnEwNnR5eFpiZzBlSzk5Qmx4WnZFQ3pFYlBGMWhmU0xCelJQSjhTK2tPNVUrYnMxR05vTVMiLCJtYWMiOiI4OWI1YmUxZTE0NzE4Yjk4NmNjYjZmNWQ0MTM5OWFiYjUwOTFiODI1ZmQ5NWUyOGIxZjg5MjY2NWRhNDhkOGM1IiwidGFnIjoiIn0%3D")
         console.log(xsrfToken)
         var options = {
             'method': 'POST',
@@ -31,37 +31,7 @@ async function login (req, res){
                 res.status(200).json(response)
             }
           });
-        // const email = req.body.email;
-        // const password = req.body.password;
-        // let xsrfToken = "eyJpdiI6Ik4vUmVtK1BreS9WSkxWMkhXb3pXR3c9PSIsInZhbHVlIjoiRFBuRm5lMUxId3plL3hPVVJiZGdzUDNLNFpxR2pnUzN1eHNOcWVwbDNCUmpFTS9GenZ3elVUNHZKTUJIREV2dHkwTnFWVWlwK2ZMSnhsNy9STFJKbmtNMkNJVGRwSDdMQnFhRERHaVdET25OT1BUL2lWQU1MWTNXNDBwdjBXemQiLCJtYWMiOiI5MWE1ZDQ4ZTUyZGU3Y2Q2ZjIxZGJkNjI1MWQ3NDRiMGY4ODhlZDZhMDc5MjM4ODM2MjliMGU5MjY5MjZjODQ5IiwidGFnIjoiIn0=";
-        // let xsrfToken = await getCSRF();
-        // console.log(xsrfToken)
-        // xsrfToken = xsrfToken[0].split("=");
-        // xsrfToken = xsrfToken[1];
-        // xsrfToken = xsrfToken.replace("; expires","").replace("%3D","=");
-        // var options = {
-        //     method: 'POST',
-        //     url: 'https://loopapi.logitgroup.com/login',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'X-XSRF-TOKEN': xsrfToken
-        //     },
-        //     formData: {
-        //         email: email,
-        //         password: password
-        //     },
-        // };
-        // console.log(options)
-        // request(options, function (e, r, body) {
-        //     let data = {};
-        //     if (e !== null) {
-        //         res.status(200).json(e)
-        //     } else {
-        //         let dd = JSON.parse(body);
-        //         res.status(200).json(dd)
-        //     }
-        // });
-    // });
+    });
 }
 
 function getCSRF(){
@@ -72,6 +42,7 @@ function getCSRF(){
         };
         
         request(options, function (error, response) {
+            console.log(response)
             if (!error) {
                 resolve(response.headers['set-cookie']);
             } else {
@@ -80,4 +51,26 @@ function getCSRF(){
         });
     });
 }
-module.exports = { login }
+
+async function getLoopProjects (req, res){
+        var options = {
+            'method': 'GET',
+            'url': 'https://loopapi.logitgroup.com/api/v1/projects/',
+            'headers': {
+              'Accept': 'application/json',
+              'Authorization': "Bearer 60|ff0uZ1qXDWd1RDu6UaEcbNxE5MLlGMLVQUNjx28q"
+            }
+          };
+          request(options, function (error, response) {
+            if (error){
+                res.status(200).json(e)
+            } else{
+                let dd = JSON.parse(response.body);
+                res.status(200).json(dd)
+            }
+          });
+}
+module.exports = { 
+    login : login, 
+    getLoopProjects: getLoopProjects
+}
